@@ -5,31 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mental Health Tracker</title>
   <link rel="stylesheet" href="style.css" />
+
+<head>
+    <title>Mood Tracker Calendar</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header>
-    <h1>🌈 Mental Health Tracker</h1>
-    <p>How are you feeling today?</p>
-  </header>
 
-  <main>
-    <div class="mood-buttons">
-      <button class="mood happy">😊 Happy</button>
-      <button class="mood calm">😌 Calm</button>
-      <button class="mood sad">😢 Sad</button>
-      <button class="mood stressed">😣 Stressed</button>
-      <button class="mood excited">🤩 Excited</button>
+    <h1 class="fade-in">Mental Health Mood Tracker</h1>
+
+    <div id="quote" class="quote-box fade-in">Select a day and choose a mood 💛</div>
+
+    <div class="calendar fade-in">
+        <div class="month">
+            <button id="prev">◀</button>
+            <h2 id="month-year"></h2>
+            <button id="next">▶</button>
+        </div>
+
+        <div class="weekdays">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+        </div>
+
+        <div class="days" id="days"></div>
     </div>
 
-    <div class="quote-box">
-      <p id="quote">Click a mood to see your quote!</p>
+    <h2 class="fade-in">Mood History Chart</h2>
+    <canvas id="moodChart" width="350" height="200"></canvas>
+
+    <!-- Mood Popup -->
+    <div id="mood-popup" class="popup pop-animate">
+        <h3>Select Your Mood</h3>
+
+        <button class="mood happy" data-mood="happy">😊 Happy</button>
+        <button class="mood calm" data-mood="calm">😌 Calm</button>
+        <button class="mood sad" data-mood="sad">😢 Sad</button>
+        <button class="mood stressed" data-mood="stressed">😣 Stressed</button>
+        <button class="mood excited" data-mood="excited">🤩 Excited</button>
+
+        <br><br>
+        <button id="close">Close</button>
     </div>
-  </main>
 
-  <footer>
-    <p>💖 Take care of yourself every day.</p>
-  </footer>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

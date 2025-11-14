@@ -60,3 +60,87 @@ function changeBackground(mood) {
   };
   body.style.background = gradients[mood];
 }
+// --- Calender function   ---
+
+const daysContainer = document.getElementById("days");
+const monthYear = document.getElementById("month-year");
+const moodPopup = document.getElementById("mood-popup");
+const closeBtn = document.getElementById("close");
+
+let currentDate = new Date();
+let selectedDay = null;
+
+function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    monthYear.innerText = currentDate.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric"
+    });
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    daysContainer.innerHTML = "";
+
+    // Empty slots before 1st day
+    for (let i = 0; i < firstDay; i++) {
+        daysContainer.innerHTML += "<div></div>";
+    }
+
+    // Add days
+    for (let day = 1; day <= lastDate; day++) {
+        const dayDiv = document.createElement("div");
+        dayDiv.innerText = day;
+
+        // Show saved mood emoji on calendar
+        const key = `${month + 1}-${day}-${year}`;
+        const savedMood = localStorage.getItem(key);
+        if (savedMood) {
+            dayDiv.innerText = `${day} ${savedMood}`;
+        }
+
+        dayDiv.addEventListener("click", () => {
+            selectedDay = key;
+            moodPopup.style.display = "block";
+        });
+
+        daysContainer.appendChild(dayDiv);
+    }
+}
+
+renderCalendar();
+
+// Navigation
+document.getElementById("prev").onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+};
+
+document.getElementById("next").onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+};
+
+// Mood Selection
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        const mood = button.dataset.mood;
+
+        // Save mood to calendar
+        localStorage.setItem(selectedDay, mood);
+
+        // Show mood quote + background gradient
+        showQuote(mood);
+        changeBackground(mood);
+
+        moodPopup.style.display = "none";
+        renderCalendar();
+    });
+});
+
+// Close Popup
+closeBtn.onclick = () => {
+    moodPopup.style.display = "none";
+};
