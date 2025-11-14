@@ -1,3 +1,5 @@
+// See all the different ways to make comments!
+// This file contains the JavaScript code for the Rise Project. It handles mood selection and displays corresponding quotes.
 // --- Mood Quotes ---
 // Each mood has a list of possible quotes.
 const moodQuotes = {
