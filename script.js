@@ -62,7 +62,8 @@ function changeBackground(mood) {
   };
   body.style.background = gradients[mood];
 }
-// --- Calender function   ---
+// --- Calender function   ---//
+
 
 const daysContainer = document.getElementById("days");
 const monthYear = document.getElementById("month-year");
