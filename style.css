@@ -133,3 +133,38 @@ body {
     border: 1px solid #ddd;
     border-radius: 10px;
 }
+
+.wheel-container {
+    position: relative;
+    width: 500px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.pointer {
+    width: 0; 
+    height: 0; 
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 40px solid gold;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.spin-button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: white;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.spin-button:hover {
+    background: #eee;
+}

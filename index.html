@@ -59,3 +59,70 @@
     <script src="script.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Affirmation Wheel</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 40px;
+            background: linear-gradient(to bottom, #cbd3ff, #a7c3ff);
+        }
+
+        .wheel-container {
+            margin-top: 20px;
+        }
+
+        .spin-button {
+            margin-top: 20px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 2px solid #444;
+            cursor: pointer;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- your existing popup -->
+    <div id="mood-popup" class="popup pop-animate">
+        <br><br>
+        <button id="close">Close</button>
+    </div>
+
+<!-- ⭐ PLACE WHEEL HERE ⭐ -->
+    <div class="wheel-container">
+        <div id="wheel" class="wheel">
+            
+            <div class="slice s1"><span class="label">??</span></div>
+            <div class="slice s2"><span class="label">??</span></div>
+            <div class="slice s3"><span class="label">??</span></div>
+            <div class="slice s4"><span class="label">??</span></div>
+            <div class="slice s5"><span class="label">??</span></div>
+            <div class="slice s6"><span class="label">??</span></div>
+
+            <div class="center" id="center">??</div>
+        </div>
+
+        <button id="spinBtn">Spin</button>
+        <div id="result"></div>
+    </div>
+    <!-- ⭐ END WHEEL ⭐ -->
+
+    <!-- your footer -->
+    <footer>
+        ❤️ Take care of yourself every day.
+    </footer>
+    <!-- load your script LAST -->
+    <script src="script.js"></script>
+
+</body>
+</html>
+
