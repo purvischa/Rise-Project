@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css" />
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -25,13 +26,8 @@
         </div>
 
         <div class="weekdays">
-            <div>Sun</div>
-            <div>Mon</div>
-            <div>Tue</div>
-            <div>Wed</div>
-            <div>Thu</div>
-            <div>Fri</div>
-            <div>Sat</div>
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
+            <div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
 
         <div class="days" id="days"></div>
@@ -42,8 +38,16 @@
         Your monthly mood summary will appear here.
     </div>
 
-    <h2 class="fade-in">Mood History Chart</h2>
-    <canvas id="moodChart" width="350" height="200"></canvas>
+    <!-- Monthly Bar Chart -->
+    <h2 class="fade-in">Monthly Mood Chart</h2>
+    <canvas id="monthlyChart" width="350" height="200"></canvas>
+
+    <!-- Yearly Summary Panel -->
+    <h2 class="fade-in">Yearly Mood Summary</h2>
+    <div id="year-summary" class="quote-box fade-in"></div>
+
+    <!-- Download Button -->
+    <button id="downloadPDF" class="download-btn fade-in">Download Monthly Report (PDF)</button>
 
     <!-- Mood Popup -->
     <div id="mood-popup" class="popup pop-animate">
