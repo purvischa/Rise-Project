@@ -1,210 +1,175 @@
 /* General page styling */
 body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
-  color: #333;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Header */
-header {
-  margin-top: 2rem;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-p {
-  margin: 0.5rem 0;
-}
-
-/* Mood Buttons */
-.mood-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-button.mood {
-  padding: 1rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: transform 0.2s, background-color 0.3s;
-}
-
-/* Mood colors */
-.happy { background-color: #ffec99; }
-.calm { background-color: #a3e4d7; }
-.sad { background-color: #aed6f1; }
-.stressed { background-color: #f5b7b1; }
-.excited { background-color: #fad7a0; }
-
-button.mood:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
-}
-
-/* Quote Box */
-.quote-box {
-  background: white;
-  border-radius: 12px;
-  margin: 2rem auto;
-  padding: 1rem;
-  width: 80%;
-  max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-#quote {
-  font-size: 1.1rem;
-  color: #444;
-}
-
-/* Footer */
-footer {
-  margin-top: auto;
-  background: rgba(255, 255, 255, 0.4);
-  padding: 1rem;
-  font-size: 0.9rem;
-}
-
-/* Calender style */
-body {
     font-family: Arial, sans-serif;
     text-align: center;
-    padding: 20px;
+    background: linear-gradient(to bottom, #cfd7ff, #acc8ff);
+    margin: 0;
+    padding-bottom: 100px;
+}
 
-    /* Center everything on the screen */
+/* HEADER */
+.title {
+    margin-top: 40px;
+    font-size: 2.2rem;
+}
+.subtitle {
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+/* MOOD BUTTONS */
+.mood-buttons {
     display: flex;
     justify-content: center;
-    align-items: center;
-
-    height: 100vh;
-    margin: 0;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.mood {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+.mood:hover {
+    transform: scale(1.1);
 }
 
-.calendar {
-    width: 350px;
+/* QUOTE */
+.quote-box {
+    width: 55%;
+    padding: 20px;
     margin: auto;
-    align-items: center;
-    padding: 20px;
+    background: #ffffffd9;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-.month {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* WHEEL TITLE */
+.wheel-title {
+    margin-top: 70px;
+    font-size: 26px;
 }
 
-.weekdays, .days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-}
-
-.days div {
-    padding: 15px;
-    border: 1px solid #eee;
-    cursor: pointer;
-}
-
-.days div:hover {
-    background-color: #f0f0f0;
-}
-
-.popup {
-    display: none;
-    position: fixed;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-    background: white;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-}
-
+/* WHEEL BASE */
 .wheel-container {
+    margin-top: 30px;
     position: relative;
-    width: 500px;
-    margin: 50px auto;
-    text-align: center;
 }
 
-.pointer {
-    width: 0; 
-    height: 0; 
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 40px solid gold;
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
+.wheel {
+    width: 360px;
+    height: 360px;
+    margin: auto;
+    border-radius: 50%;
+    border: 10px solid #444;
+    position: relative;
+    overflow: hidden;
+    transform: rotate(0deg);
 }
 
-.spin-button {
-    margin-top: 20px;
-    padding: 12px 25px;
-    background: white;
-    border-radius: 10px;
-    border: 2px solid #ccc;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-.spin-button:hover {
-    background: #eee;
-}
-
+/* SLICE STYLE */
 .slice {
     position: absolute;
     width: 50%;
     height: 50%;
-    transform-origin: 100% 100%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0% 0%;
     overflow: hidden;
     perspective: 800px;
 }
 
 .front, .back {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
+    width: 200%;
+    height: 200%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: bold;
+    backface-visibility: hidden;
+    border-radius: 50%;
 }
 
-.front {
-    background: rgba(255,255,255,0.2);
-}
-
+/* Flip back */
 .back {
-    background: rgba(0,0,0,0.3);
     transform: rotateY(180deg);
+    color: #fff;
 }
 
-/* Flip animation class */
+/* SLICE COLORS */
+.s1 { transform: rotate(0deg); background: #ff3b30; }
+.s2 { transform: rotate(60deg); background: #ffcc00; }
+.s3 { transform: rotate(120deg); background: #34c759; }
+.s4 { transform: rotate(180deg); background: #007aff; }
+.s5 { transform: rotate(240deg); background: #af52de; }
+.s6 { transform: rotate(300deg); background: #ff9500; }
+
+/* Text containers inherit slice color */
+.s1 .front, .s1 .back { background: #ff3b30; }
+.s2 .front, .s2 .back { background: #ffcc00; }
+.s3 .front, .s3 .back { background: #34c759; }
+.s4 .front, .s4 .back { background: #007aff; }
+.s5 .front, .s5 .back { background: #af52de; }
+.s6 .front, .s6 .back { background: #ff9500; }
+
+/* CENTER CIRCLE */
+.center {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: #333;
+    top: 110px;
+    left: 110px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 5px 12px rgba(0,0,0,0.4);
+}
+
+/* SPIN BUTTON */
+.spinBtn {
+    margin-top: 35px;
+    padding: 12px 25px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.spinBtn:hover {
+    transform: scale(1.1);
+}
+
+/* FLIP ANIMATION */
 .flip {
     animation: flipSlice 0.8s forwards;
 }
-
 @keyframes flipSlice {
-    from { transform: rotateY(0deg); }
-    to   { transform: rotateY(180deg); }
+    from { transform: rotateY(0); }
+    to { transform: rotateY(180deg); }
+}
+
+/* RESULT TEXT */
+.result {
+    margin-top: 15px;
+    font-size: 22px;
+}
+
+/* FOOTER */
+footer {
+    margin-top: 80px;
+    padding: 20px;
+    font-size: 18px;
 }

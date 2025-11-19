@@ -143,90 +143,39 @@ buttons.forEach(button => {
     });
 });
 
-const canvas = document.getElementById("wheelCanvas");
-const ctx = canvas.getContext("2d");
-
-const slices = 6;
-const sliceAngle = 360 / slices;
-const colors = ["#FF4444", "#FFCC00", "#66CC33", "#3399FF", "#9933CC", "#FF8800"];
-let rotation = 0;
-let spinning = false;
-
-function drawWheel() {
-    ctx.clearRect(0, 0, 500, 500);
-
-    for (let i = 0; i < slices; i++) {
-        ctx.beginPath();
-        ctx.moveTo(250, 250);
-        ctx.fillStyle = colors[i];
-        ctx.arc(250, 250, 240, 
-            (rotation + sliceAngle * i) * Math.PI / 180, 
-            (rotation + sliceAngle * (i + 1)) * Math.PI / 180
-        );
-        ctx.fill();
-
-        ctx.save();
-        ctx.translate(250, 250);
-        ctx.rotate(((sliceAngle * i + sliceAngle / 2) + rotation) * Math.PI / 180);
-        ctx.textAlign = "center";
-        ctx.font = "bold 40px Arial";
-        ctx.fillStyle = "white";
-        ctx.fillText("??", 160, 10);
-        ctx.restore();
-    }
-}
-
-function spinWheel() {
-    if (spinning) return;
-    spinning = true;
-
-    let spinTime = 0;
-    let spinDuration = 3000;
-    let spinVelocity = Math.random() * 20 + 30;
-
-    function animate() {
-        spinTime += 20;
-        if (spinTime >= spinDuration) {
-            spinning = false;
-            return;
-        }
-
-        rotation += spinVelocity; 
-        spinVelocity *= 0.97;
-
-        drawWheel();
-        requestAnimationFrame(animate);
-    }
-    animate();
-}
-
-document.querySelector(".spin-button").addEventListener("click", spinWheel);
-drawWheel();
-
 const wheel = document.getElementById("wheel");
 const spinBtn = document.getElementById("spinBtn");
+const result = document.getElementById("result");
+
 let spinning = false;
 
 spinBtn.addEventListener("click", () => {
     if (spinning) return;
     spinning = true;
 
-    // Clear old flips
+    // Remove old flips
     document.querySelectorAll(".slice").forEach(slice =>
         slice.classList.remove("flip")
     );
+
+    result.textContent = "";
 
     const randomDeg = 720 + Math.floor(Math.random() * 360);
     wheel.style.transition = "transform 4s cubic-bezier(.17,.67,.29,1.32)";
     wheel.style.transform = `rotate(${randomDeg}deg)`;
 
     setTimeout(() => {
-        const actualDeg = randomDeg % 360;
-        const sliceIndex = Math.floor((360 - actualDeg) / 60) % 6;
+        const finalDeg = randomDeg % 360;
+        const winningIndex = Math.floor((360 - finalDeg) / 60) % 6;
 
-        const landedSlice = document.querySelector(`.s${sliceIndex + 1}`);
-        landedSlice.classList.add("flip");
+        const winningSlice = document.querySelector(`.s${winningIndex + 1}`);
+        const affirmation = winningSlice.querySelector(".back").textContent;
+
+        // Flip the slice visually
+        winningSlice.classList.add("flip");
+
+        result.textContent = affirmation;
 
         spinning = false;
-    }, 4100);
+    }, 4200);
 });

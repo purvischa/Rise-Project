@@ -2,168 +2,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mental Health Tracker</title>
-  <link rel="stylesheet" href="style.css" />
-
-<head>
-    <title>Mood Tracker Calendar</title>
-    <link rel="stylesheet" href="style.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-
-    <h1 class="fade-in">Mental Health Mood Tracker</h1>
-
-    <div id="quote" class="quote-box fade-in">Select a day and choose a mood 💛</div>
-
-    <div class="calendar fade-in">
-        <div class="month">
-            <button id="prev">◀</button>
-            <h2 id="month-year"></h2>
-            <button id="next">▶</button>
-        </div>
-
-        <div class="weekdays">
-            <div>Sun</div>
-            <div>Mon</div>
-            <div>Tue</div>
-            <div>Wed</div>
-            <div>Thu</div>
-            <div>Fri</div>
-            <div>Sat</div>
-        </div>
-
-        <div class="days" id="days"></div>
-    </div>
-
-    <h2 class="fade-in">Mood History Chart</h2>
-    <canvas id="moodChart" width="350" height="200"></canvas>
-
-    <!-- Mood Popup -->
-    <div id="mood-popup" class="popup pop-animate">
-        <h3>Select Your Mood</h3>
-
-        <button class="mood happy" data-mood="happy">😊 Happy</button>
-        <button class="mood calm" data-mood="calm">😌 Calm</button>
-        <button class="mood sad" data-mood="sad">😢 Sad</button>
-        <button class="mood stressed" data-mood="stressed">😣 Stressed</button>
-        <button class="mood excited" data-mood="excited">🤩 Excited</button>
-
-        <br><br>
-        <button id="close">Close</button>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
     <meta charset="UTF-8">
-    <title>Affirmation Wheel</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 40px;
-            background: linear-gradient(to bottom, #cbd3ff, #a7c3ff);
-        }
-
-        .wheel-container {
-            margin-top: 20px;
-        }
-
-        .spin-button {
-            margin-top: 20px;
-            background: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: 2px solid #444;
-            cursor: pointer;
-            display: inline-block;
-        }
-    </style>
+    <title>Mental Health Tracker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- your existing popup -->
-    <div id="mood-popup" class="popup pop-animate">
-        <br><br>
-        <button id="close">Close</button>
+    <!-- 🌈 HEADER -->
+    <h1 class="title">🌈 Mental Health Tracker</h1>
+    <p class="subtitle">How are you feeling today?</p>
+
+    <!-- 😊 MOOD BUTTONS -->
+    <div class="mood-buttons">
+        <button class="mood">😊 Happy</button>
+        <button class="mood">😌 Calm</button>
+        <button class="mood">🥺 Sad</button>
+        <button class="mood">😣 Stressed</button>
+        <button class="mood">🤩 Excited</button>
     </div>
 
-<!-- ⭐ PLACE WHEEL HERE ⭐ -->
+    <!-- 💬 QUOTE BOX -->
+    <div class="quote-box" id="quoteBox">
+        Click a mood to see your quote!
+    </div>
+
+
+    <!-- 🎡 AFFIRMATION WHEEL (AT BOTTOM OF PAGE) -->
+    <h2 class="wheel-title">🎡 Spin for an affirmation</h2>
+
     <div class="wheel-container">
         <div id="wheel" class="wheel">
-            
-            <div class="slice s1"><span class="label">??</span></div>
-            <div class="slice s2"><span class="label">??</span></div>
-            <div class="slice s3"><span class="label">??</span></div>
-            <div class="slice s4"><span class="label">??</span></div>
-            <div class="slice s5"><span class="label">??</span></div>
-            <div class="slice s6"><span class="label">??</span></div>
 
-            <div class="center" id="center">??</div>
+            <div class="slice s1">
+                <div class="front">??</div>
+                <div class="back">You are strong and capable.</div>
+            </div>
+
+            <div class="slice s2">
+                <div class="front">??</div>
+                <div class="back">You are worthy of good things.</div>
+            </div>
+
+            <div class="slice s3">
+                <div class="front">??</div>
+                <div class="back">You deserve peace and rest.</div>
+            </div>
+
+            <div class="slice s4">
+                <div class="front">??</div>
+                <div class="back">You are growing every day.</div>
+            </div>
+
+            <div class="slice s5">
+                <div class="front">??</div>
+                <div class="back">You are becoming your best self.</div>
+            </div>
+
+            <div class="slice s6">
+                <div class="front">??</div>
+                <div class="back">You are loved and appreciated.</div>
+            </div>
+
+            <!-- Center Circle -->
+            <div id="center" class="center">Click to Spin</div>
         </div>
 
-        <button id="spinBtn">Spin</button>
-        <div id="result"></div>
+        <button id="spinBtn" class="spinBtn">SPIN</button>
+        <div id="result" class="result"></div>
     </div>
 
-    <div class="wheel-container">
-    <div id="wheel" class="wheel">
-
-        <div class="slice s1">
-            <div class="front">??</div>
-            <div class="back">You are strong and capable.</div>
-        </div>
-
-        <div class="slice s2">
-            <div class="front">??</div>
-            <div class="back">You are worthy of good things.</div>
-        </div>
-
-        <div class="slice s3">
-            <div class="front">??</div>
-            <div class="back">You deserve peace and rest.</div>
-        </div>
-
-        <div class="slice s4">
-            <div class="front">??</div>
-            <div class="back">You are growing every day.</div>
-        </div>
-
-        <div class="slice s5">
-            <div class="front">??</div>
-            <div class="back">You are becoming your best self.</div>
-        </div>
-
-        <div class="slice s6">
-            <div class="front">??</div>
-            <div class="back">You are loved and appreciated.</div>
-        </div>
-
-        <div class="center" id="center">??</div>
-    </div>
-
-    <button id="spinBtn">Spin</button>
-    <div id="result"></div>
-</div>
-
-    <!-- ⭐ END WHEEL ⭐ -->
-
-    <!-- your footer -->
+    <!-- ❤️ FOOTER -->
     <footer>
         ❤️ Take care of yourself every day.
     </footer>
-    <!-- load your script LAST -->
-    <script src="script.js"></script>
 
+    <script src="script.js"></script>
 </body>
 </html>
+
 
