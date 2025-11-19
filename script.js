@@ -202,3 +202,31 @@ function spinWheel() {
 
 document.querySelector(".spin-button").addEventListener("click", spinWheel);
 drawWheel();
+
+const wheel = document.getElementById("wheel");
+const spinBtn = document.getElementById("spinBtn");
+let spinning = false;
+
+spinBtn.addEventListener("click", () => {
+    if (spinning) return;
+    spinning = true;
+
+    // Clear old flips
+    document.querySelectorAll(".slice").forEach(slice =>
+        slice.classList.remove("flip")
+    );
+
+    const randomDeg = 720 + Math.floor(Math.random() * 360);
+    wheel.style.transition = "transform 4s cubic-bezier(.17,.67,.29,1.32)";
+    wheel.style.transform = `rotate(${randomDeg}deg)`;
+
+    setTimeout(() => {
+        const actualDeg = randomDeg % 360;
+        const sliceIndex = Math.floor((360 - actualDeg) / 60) % 6;
+
+        const landedSlice = document.querySelector(`.s${sliceIndex + 1}`);
+        landedSlice.classList.add("flip");
+
+        spinning = false;
+    }, 4100);
+});
