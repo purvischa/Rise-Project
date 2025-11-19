@@ -1,7 +1,4 @@
-// See all the different ways to make comments!
-// This file contains the JavaScript code for the Rise Project. It handles mood selection and displays corresponding quotes.
 // --- Mood Quotes ---
-// Each mood has a list of possible quotes.
 const moodQuotes = {
   happy: [
     "Keep shining, your joy is contagious!",
@@ -30,28 +27,27 @@ const moodQuotes = {
   ]
 };
 
-// --- DOM Elements ---
+// DOM elements
 const buttons = document.querySelectorAll(".mood");
 const quoteDisplay = document.getElementById("quote");
 const body = document.body;
 
-// --- Event Listeners for Buttons ---
 buttons.forEach(button => {
   button.addEventListener("click", () => {
-    const mood = button.classList[1]; // e.g. "happy", "calm", etc.
+    const mood = button.dataset.mood;
     showQuote(mood);
     changeBackground(mood);
   });
 });
 
-// --- Show Random Quote ---
+// Show random quote
 function showQuote(mood) {
   const quotes = moodQuotes[mood];
   const randomIndex = Math.floor(Math.random() * quotes.length);
   quoteDisplay.innerText = quotes[randomIndex];
 }
 
-// --- Change Background Gradient ---
+// Change background
 function changeBackground(mood) {
   const gradients = {
     happy: "linear-gradient(135deg, #fff6b7, #f6416c)",
@@ -62,9 +58,8 @@ function changeBackground(mood) {
   };
   body.style.background = gradients[mood];
 }
-// --- Calender function   ---//
 
-
+// ------------ CALENDAR -------------
 const daysContainer = document.getElementById("days");
 const monthYear = document.getElementById("month-year");
 const moodPopup = document.getElementById("mood-popup");
@@ -87,19 +82,19 @@ function renderCalendar() {
 
     daysContainer.innerHTML = "";
 
-    // Empty slots before 1st day
+    // Empty days before the 1st
     for (let i = 0; i < firstDay; i++) {
         daysContainer.innerHTML += "<div></div>";
     }
 
-    // Add days
+    // Add days with mood
     for (let day = 1; day <= lastDate; day++) {
         const dayDiv = document.createElement("div");
         dayDiv.innerText = day;
 
-        // Show saved mood emoji on calendar
         const key = `${month + 1}-${day}-${year}`;
         const savedMood = localStorage.getItem(key);
+
         if (savedMood) {
             dayDiv.innerText = `${day} ${savedMood}`;
         }
@@ -111,6 +106,8 @@ function renderCalendar() {
 
         daysContainer.appendChild(dayDiv);
     }
+
+    updatePersonalMessage();
 }
 
 renderCalendar();
@@ -126,24 +123,79 @@ document.getElementById("next").onclick = () => {
     renderCalendar();
 };
 
-// Mood Selection
+// Mood selection popup
 buttons.forEach(button => {
     button.addEventListener("click", () => {
         const mood = button.dataset.mood;
 
-        // Save mood to calendar
         localStorage.setItem(selectedDay, mood);
 
-        // Show mood quote + background gradient
         showQuote(mood);
         changeBackground(mood);
 
         moodPopup.style.display = "none";
         renderCalendar();
+        updatePersonalMessage();
     });
 });
 
-// Close Popup
 closeBtn.onclick = () => {
     moodPopup.style.display = "none";
 };
+
+// --------- MONTHLY ANALYTICS ---------
+
+function getMonthlyMoodCounts(year, month) {
+    const counts = { happy: 0, calm: 0, sad: 0, stressed: 0, excited: 0 };
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    for (let day = 1; day <= lastDate; day++) {
+        const key = `${month + 1}-${day}-${year}`;
+        const mood = localStorage.getItem(key);
+
+        if (mood && counts[mood] !== undefined) {
+            counts[mood]++;
+        }
+    }
+    return counts;
+}
+
+function getPersonalizedMessage(counts) {
+    const { happy, calm, sad, stressed, excited } = counts;
+
+    if (happy >= 5 && sad >= 5) {
+        return "You're experiencing both highs and lows — try finding small habits that help balance your mood 💛";
+    }
+
+    if (stressed >= 7) {
+        return "It looks like stress has been building up. Remember to slow down and breathe 🌿";
+    }
+
+    if (happy >= 10) {
+        return "Such a joyful month! Keep that positive energy flowing ✨";
+    }
+
+    if (sad >= 8) {
+        return "It seems like this month was emotionally heavy. Be gentle with yourself 💙";
+    }
+
+    if (excited >= 6) {
+        return "Lots of excitement lately — keep riding that inspiration! 🤩";
+    }
+
+    if (calm >= 8) {
+        return "A calm, grounded month — you're finding balance 🌱";
+    }
+
+    return "Track more days this month to get personalized insights 🌈";
+}
+
+function updatePersonalMessage() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    const counts = getMonthlyMoodCounts(year, month);
+    const message = getPersonalizedMessage(counts);
+
+    document.getElementById("personal-message").innerText = message;
+}
