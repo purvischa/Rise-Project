@@ -1,93 +1,173 @@
-body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
-  color: #333;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+:root{
+  --bg1: #fff7fb;
+  --bg2: #fefbff;
+  --card: #ffffff;
+  --accent1: #ffd6e8;
+  --accent2: #d8fff0;
+  --accent3: #d0e9ff;
+  --accent4: #ffe7d3;
+  --accent5: #fff1a8;
+  --muted: #7a6f86;
+  --round: 16px;
+  --soft-shadow: 0 8px 18px rgba(99,73,95,0.06);
 }
 
-h1 {
-  font-size: 2rem;
-  margin-top: 1.5rem;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: "Nunito", "Poppins", system-ui, -apple-system, sans-serif;
+  background: linear-gradient(180deg, var(--bg1), var(--bg2));
+  color:#2a2240;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px;
 }
 
-.quote-box {
-  background: white;
-  border-radius: 12px;
-  margin: 1.5rem auto;
-  padding: 1rem;
-  width: 80%;
-  max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+/* App container */
+.app{
+  width:100%;
+  max-width:980px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
 }
 
-.calendar {
-  width: 350px;
-  margin: auto;
-  padding: 20px;
+/* Top header */
+.topcard{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  background:linear-gradient(135deg,#fff,#fff6fb);
+  padding:12px 16px;
+  border-radius:20px;
+  box-shadow: var(--soft-shadow);
+}
+.logo{
+  width:56px;height:56px;border-radius:14px;
+  background:linear-gradient(135deg,#ffd6ea,#fff6d6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+  box-shadow: 0 6px 14px rgba(255,186,215,0.25);
+}
+.topcard h1{margin:0;font-size:1.2rem}
+.subtitle{margin:0;font-size:0.85rem;color:var(--muted)}
+
+/* Center grid */
+.center-grid{
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:18px;
 }
 
-.month {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Cards */
+.card{
+  background:var(--card);
+  padding:14px;
+  border-radius:20px;
+  box-shadow: var(--soft-shadow);
 }
 
-.weekdays, .days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+/* Calendar card specifics */
+.calendar-card{min-height:360px}
+.month-row{display:flex;align-items:center;justify-content:space-between;padding:6px 4px}
+.month-title{font-weight:700;margin:0}
+.nav-btn{
+  background:transparent;border:none;font-size:18px;padding:8px;border-radius:10px;cursor:pointer;
+  transition:transform .12s ease;
+}
+.nav-btn:hover{transform:translateY(-3px)}
+
+/* weekdays */
+.cute-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px;color:var(--muted);font-size:0.84rem}
+.days-grid{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
 }
 
-.days div {
-  padding: 15px;
-  border: 1px solid #eee;
-  cursor: pointer;
+/* day tiles - kawaii sticky style */
+.days-grid > div{
+  min-height:54px;
+  border-radius:12px;
+  background:linear-gradient(180deg, #ffffff, #fff9fb);
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-start;
+  padding:8px;
+  font-weight:600;
+  color:#3b2e44;
+  position:relative;
+  cursor:pointer;
+  border:1px solid rgba(45,25,45,0.04);
+  transition:transform .08s ease, box-shadow .12s ease;
+}
+.days-grid > div:hover{transform:translateY(-6px);box-shadow:0 12px 26px rgba(96,50,110,0.06)}
+
+/* mood label inside tile */
+.days-grid > div .mood-chip{
+  position:absolute;right:8px;bottom:8px;font-size:13px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.85);
+  box-shadow:0 4px 8px rgba(96,50,110,0.04)
 }
 
-.days div:hover {
-  background-color: #f0f0f0;
+/* info box (personal message) */
+.info-box{
+  margin-top:12px;
+  background:linear-gradient(180deg,#fff,#fffbff);
+  padding:10px;
+  border-radius:12px;
+  font-size:0.95rem;
+  color:#4b3a57;
 }
 
-.popup {
-  display: none;
-  position: fixed;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -30%);
-  background: white;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  z-index: 10;
+/* tiny legend */
+.tiny-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.legend-pill{display:inline-block;padding:6px 8px;border-radius:999px;font-size:0.8rem;border:1px solid rgba(0,0,0,0.03)}
+
+/* Analytics card */
+.analytics-card{display:flex;flex-direction:column;gap:12px}
+.mini-card{background:linear-gradient(180deg,#ffffff,#fffbff);padding:10px;border-radius:12px}
+.actions{display:flex;gap:8px;align-items:center}
+
+/* Buttons */
+.primary-btn{
+  background:linear-gradient(90deg,#ffb7d6,#ffd6a8);
+  border:none;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700;
+  box-shadow:0 8px 18px rgba(255,150,200,0.12);
 }
+.primary-btn:hover{transform:translateY(-3px)}
+.ghost-btn{background:transparent;border:1px dashed rgba(120,90,120,0.12);padding:8px 12px;border-radius:10px;cursor:pointer}
+.danger-btn{background:#ffdede;border:none;padding:8px 12px;border-radius:10px;cursor:pointer}
 
-button.mood {
-  padding: 10px;
-  margin: 5px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+/* Quote area */
+.quote-wrap{display:flex;justify-content:center}
+.quote-box{max-width:640px;background:linear-gradient(180deg,#fff,#fff9fb);padding:12px;border-radius:12px;box-shadow:var(--soft-shadow);font-size:0.98rem;color:#49365a}
+
+/* Popup */
+.popup{
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.98);z-index:60;
+  display:none;padding:12px;border-radius:16px;backdrop-filter:blur(6px);
 }
-
-.happy { background-color: #ffec99; }
-.calm { background-color: #a3e4d7; }
-.sad { background-color: #aed6f1; }
-.stressed { background-color: #f5b7b1; }
-.excited { background-color: #fad7a0; }
-
-.download-btn {
-  background: #ffffff;
-  border: 2px solid #555;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin-bottom: 20px;
+.popup-inner{
+  background:linear-gradient(180deg,#fff,#fff7fb);padding:16px;border-radius:12px;box-shadow:0 16px 40px rgba(112,50,100,0.08);
+  width:340px;
 }
+.popup h3{margin-top:0}
+.mood-row{display:flex;gap:8px;justify-content:space-between;margin:10px 0}
+.moodbtn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;border-radius:12px;border:none;cursor:pointer;
+  width:56px;height:64px;background:linear-gradient(180deg,#fff,#fff6f8);font-size:20px;
+  transition:transform .08s ease;
+}
+.moodbtn span{margin-top:6px;font-size:12px;color:var(--muted)}
+.moodbtn:hover{transform:translateY(-6px)}
 
-.download-btn:hover {
-  background: #f0f0f0;
+/* small responsive */
+@media (max-width:900px){
+  .center-grid{grid-template-columns:1fr; padding:0 12px}
+  .analytics-card{order:2}
 }

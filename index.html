@@ -1,68 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kawaii Mood Tracker</title>
 
-  <title>Mental Health Mood Tracker</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
 
+  <!-- Chart.js and jsPDF -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-
 <body>
+  <main class="app">
+    <header class="topcard">
+      <div class="logo">💖</div>
+      <div>
+        <h1>Kawaii Mood Tracker</h1>
+        <p class="subtitle">soft pastel vibes • gentle check-ins</p>
+      </div>
+    </header>
 
-    <h1 class="fade-in">Mental Health Mood Tracker</h1>
-
-    <div id="quote" class="quote-box fade-in">Select a day and choose a mood 💛</div>
-
-    <!-- Calendar -->
-    <div class="calendar fade-in">
-        <div class="month">
-            <button id="prev">◀</button>
-            <h2 id="month-year"></h2>
-            <button id="next">▶</button>
+    <section class="center-grid">
+      <!-- Left column: calendar + personal message -->
+      <div class="card calendar-card">
+        <div class="month-row">
+          <button id="prev" class="nav-btn">◀</button>
+          <h2 id="month-year" class="month-title"></h2>
+          <button id="next" class="nav-btn">▶</button>
         </div>
 
-        <div class="weekdays">
-            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
-            <div>Thu</div><div>Fri</div><div>Sat</div>
+        <div class="weekdays cute-row">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
+          <div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
 
-        <div class="days" id="days"></div>
-    </div>
+        <div id="days" class="days-grid" aria-label="calendar days"></div>
 
-    <!-- Personalized Monthly Message -->
-    <div id="personal-message" class="quote-box fade-in" style="margin-top: 20px;">
-        Your monthly mood summary will appear here.
-    </div>
+        <div id="personal-message" class="info-box">
+          Your monthly mood summary will appear here ✨
+        </div>
 
-    <!-- Monthly Bar Chart -->
-    <h2 class="fade-in">Monthly Mood Chart</h2>
-    <canvas id="monthlyChart" width="350" height="200"></canvas>
+        <div class="tiny-legend">
+          <div><span class="legend-pill" style="background:#ffd6e8">😊 Happy</span></div>
+          <div><span class="legend-pill" style="background:#d8fff0">😌 Calm</span></div>
+          <div><span class="legend-pill" style="background:#d0e9ff">😢 Sad</span></div>
+          <div><span class="legend-pill" style="background:#ffe7d3">😣 Stressed</span></div>
+          <div><span class="legend-pill" style="background:#fff1a8">🤩 Excited</span></div>
+        </div>
+      </div>
 
-    <!-- Yearly Summary Panel -->
-    <h2 class="fade-in">Yearly Mood Summary</h2>
-    <div id="year-summary" class="quote-box fade-in"></div>
+      <!-- Right column: chart, year summary, download -->
+      <div class="card analytics-card">
+        <div class="mini-card">
+          <h3>Monthly Mood Chart</h3>
+          <canvas id="monthlyChart" width="350" height="200"></canvas>
+        </div>
 
-    <!-- Download Button -->
-    <button id="downloadPDF" class="download-btn fade-in">Download Monthly Report (PDF)</button>
+        <div class="mini-card">
+          <h3>Yearly Summary</h3>
+          <div id="year-summary" class="info-box small">Yearly totals will show here</div>
+        </div>
+
+        <div class="actions">
+          <button id="downloadPDF" class="primary-btn">📥 Download Report</button>
+          <button id="clear-month" class="ghost-btn">🧹 Clear Month</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="quote-wrap">
+      <div id="quote" class="quote-box">Select a day and choose a mood 💛</div>
+    </section>
 
     <!-- Mood Popup -->
-    <div id="mood-popup" class="popup pop-animate">
-        <h3>Select Your Mood</h3>
+    <div id="mood-popup" class="popup" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="popup-inner">
+        <h3>How are you feeling today?</h3>
 
-        <button class="mood happy" data-mood="happy">😊 Happy</button>
-        <button class="mood calm" data-mood="calm">😌 Calm</button>
-        <button class="mood sad" data-mood="sad">😢 Sad</button>
-        <button class="mood stressed" data-mood="stressed">😣 Stressed</button>
-        <button class="mood excited" data-mood="excited">🤩 Excited</button>
+        <div class="mood-row">
+          <button class="moodbtn" data-mood="happy">😊<span>Happy</span></button>
+          <button class="moodbtn" data-mood="calm">😌<span>Calm</span></button>
+          <button class="moodbtn" data-mood="sad">😢<span>Sad</span></button>
+          <button class="moodbtn" data-mood="stressed">😣<span>Stressed</span></button>
+          <button class="moodbtn" data-mood="excited">🤩<span>Excited</span></button>
+        </div>
 
-        <br><br>
-        <button id="close">Close</button>
+        <div class="popup-actions">
+          <button id="close" class="ghost-btn">Close</button>
+          <button id="remove-entry" class="danger-btn">Delete Day</button>
+        </div>
+      </div>
     </div>
+  </main>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

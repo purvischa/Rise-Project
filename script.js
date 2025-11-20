@@ -1,72 +1,88 @@
-// --- Mood Quotes ---
+/* --------------------
+   Kawaii Mood Tracker
+   -------------------- */
+
+// ----------------- Mood Quotes -----------------
 const moodQuotes = {
-  happy: ["Keep shining!", "Happiness looks great on you 🌞", "Cherish this moment!"],
-  calm: ["Peace begins with a breath 🌿", "You're grounded.", "Stillness is your power."],
-  sad: ["It's okay to feel sad 💙", "One small step.", "You are allowed to rest."],
-  stressed: ["Breathe. You've got this.", "Progress, not perfection.", "You are stronger than stress."],
-  excited: ["Ride the excitement!", "Great things ahead!", "Energy is flowing ✨"]
+  happy: ["Keep shining, your joy is cute! ✨", "Happiness looks great on you 😊", "Soft smiles are powerful."],
+  calm: ["Breathe in, soft out 🌿", "You're exactly where you need to be.", "Peace looks lovely on you."],
+  sad: ["It's okay to feel — be gentle 💙", "One small step at a time.", "You are allowed to rest."],
+  stressed: ["Take a tiny pause 🌬️", "You're doing the best you can.", "Tiny breaks help a lot."],
+  excited: ["Yay — ride that wave! 🤩", "Sparkles and energy incoming!", "So much joyful energy!"]
 };
 
-// DOM
-const buttons = document.querySelectorAll(".mood");
+// ---------------- DOM ----------------
 const quoteDisplay = document.getElementById("quote");
-const body = document.body;
-
-function showQuote(mood) {
-  const quotes = moodQuotes[mood];
-  quoteDisplay.innerText = quotes[Math.floor(Math.random() * quotes.length)];
-}
-
-function changeBackground(mood) {
-  const gradients = {
-    happy: "linear-gradient(135deg, #fff6b7, #f6416c)",
-    calm: "linear-gradient(135deg, #a8edea, #fed6e3)",
-    sad: "linear-gradient(135deg, #89f7fe, #66a6ff)",
-    stressed: "linear-gradient(135deg, #fbc2eb, #a6c1ee)",
-    excited: "linear-gradient(135deg, #fddb92, #d1fdff)"
-  };
-  body.style.background = gradients[mood];
-}
-
-// Calendar -----------------------
 const daysContainer = document.getElementById("days");
 const monthYear = document.getElementById("month-year");
 const moodPopup = document.getElementById("mood-popup");
 const closeBtn = document.getElementById("close");
+const removeBtn = document.getElementById("remove-entry");
 const downloadPDF = document.getElementById("downloadPDF");
+const clearMonthBtn = document.getElementById("clear-month");
+
+const moodButtonsSelector = () => document.querySelectorAll(".moodbtn");
 
 let currentDate = new Date();
-let selectedDay = null;
+let selectedDayKey = null;
 let monthlyChart = null;
 
-function renderCalendar() {
+// ---------------- Utilities ----------------
+function keyFor(year, month, day){
+  return `${month + 1}-${day}-${year}`;
+}
+
+function showQuote(mood){
+  const arr = moodQuotes[mood] || ["Thanks for checking in 💛"];
+  quoteDisplay.innerText = arr[Math.floor(Math.random() * arr.length)];
+}
+
+function setBGFor(mood){
+  const map = {
+    happy: "linear-gradient(135deg, #fff6e8, #ffd6e8)",
+    calm: "linear-gradient(135deg, #e9fff8, #d9f7ff)",
+    sad: "linear-gradient(135deg, #eef7ff, #dbe9ff)",
+    stressed: "linear-gradient(135deg, #fff6f0, #ffeef0)",
+    excited: "linear-gradient(135deg, #fffbea, #fff6d6)"
+  };
+  document.body.style.background = map[mood] || "";
+}
+
+// ---------------- Calendar render ----------------
+function renderCalendar(){
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  monthYear.innerText = currentDate.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric"
-  });
+  monthYear.innerText = currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   const firstDay = new Date(year, month, 1).getDay();
   const lastDate = new Date(year, month + 1, 0).getDate();
 
   daysContainer.innerHTML = "";
 
-  for (let i = 0; i < firstDay; i++) {
-    daysContainer.innerHTML += "<div></div>";
+  for(let i = 0; i < firstDay; i++){
+    const empty = document.createElement("div");
+    empty.classList.add("empty");
+    daysContainer.appendChild(empty);
   }
 
-  for (let day = 1; day <= lastDate; day++) {
+  for(let d = 1; d <= lastDate; d++){
     const div = document.createElement("div");
-    const key = `${month + 1}-${day}-${year}`;
+    const key = keyFor(year, month, d);
     const mood = localStorage.getItem(key);
 
-    div.innerText = mood ? `${day} ${mood}` : day;
+    div.innerText = d;
+    if(mood){
+      const chip = document.createElement("div");
+      chip.className = "mood-chip";
+      chip.innerText = emojiFor(mood);
+      div.appendChild(chip);
+      div.style.border = "1px dashed rgba(0,0,0,0.02)";
+    }
 
     div.addEventListener("click", () => {
-      selectedDay = key;
-      moodPopup.style.display = "block";
+      selectedDayKey = key;
+      openPopupFor(key);
     });
 
     daysContainer.appendChild(div);
@@ -77,122 +93,168 @@ function renderCalendar() {
   updateYearlySummary();
 }
 
-renderCalendar();
+// ---------------- Emoji helper ----------------
+function emojiFor(mood){
+  return {
+    happy: "😊",
+    calm: "😌",
+    sad: "😢",
+    stressed: "😣",
+    excited: "🤩"
+  }[mood] || "";
+}
 
-document.getElementById("prev").onclick = () => {
-  currentDate.setMonth(currentDate.getMonth() - 1);
-  renderCalendar();
-};
-document.getElementById("next").onclick = () => {
-  currentDate.setMonth(currentDate.getMonth() + 1);
-  renderCalendar();
-};
+// ---------------- Popup ----------------
+function openPopupFor(key){
+  moodPopup.style.display = "block";
+  moodPopup.setAttribute("aria-hidden", "false");
+  // show current mood selection highlight (optional)
+}
 
-buttons.forEach(button => {
-  button.addEventListener("click", () => {
-    const mood = button.dataset.mood;
+function closePopup(){
+  moodPopup.style.display = "none";
+  moodPopup.setAttribute("aria-hidden", "true");
+}
 
-    localStorage.setItem(selectedDay, mood);
-
-    showQuote(mood);
-    changeBackground(mood);
-
-    moodPopup.style.display = "none";
-    renderCalendar();
+// wire mood buttons (delegated)
+function wireMoodButtons(){
+  moodButtonsSelector().forEach(btn => {
+    btn.onclick = () => {
+      const mood = btn.dataset.mood;
+      if(!selectedDayKey) return;
+      localStorage.setItem(selectedDayKey, mood);
+      showQuote(mood);
+      setBGFor(mood);
+      closePopup();
+      renderCalendar();
+    };
   });
-});
+}
 
-closeBtn.onclick = () => moodPopup.style.display = "none";
+// remove entry
+removeBtn.onclick = () => {
+  if(!selectedDayKey) return closePopup();
+  localStorage.removeItem(selectedDayKey);
+  showQuote("calm");
+  closePopup();
+  renderCalendar();
+};
 
-// ----------- MONTHLY ANALYTICS ---------------
-function getMonthlyMoodCounts(year, month) {
-  const list = { happy: 0, calm: 0, sad: 0, stressed: 0, excited: 0 };
-  const lastDate = new Date(year, month + 1, 0).getDate();
+closeBtn.onclick = closePopup;
 
-  for (let d = 1; d <= lastDate; d++) {
-    const key = `${month + 1}-${d}-${year}`;
-    const mood = localStorage.getItem(key);
-    if (list[mood] !== undefined) list[mood]++;
+// ---------------- Monthly counts ----------------
+function getMonthlyMoodCounts(year, month){
+  const counts = { happy:0, calm:0, sad:0, stressed:0, excited:0 };
+  const last = new Date(year, month + 1, 0).getDate();
+  for(let d=1; d<=last; d++){
+    const mood = localStorage.getItem(keyFor(year, month, d));
+    if(mood && counts[mood] !== undefined) counts[mood]++;
   }
-  return list;
+  return counts;
 }
 
-function getPersonalizedMessage(c) {
-  if (c.happy >= 5 && c.sad >= 5) return "High highs + low lows — work on balance 💛";
-  if (c.stressed >= 7) return "Lots of stress this month. Breathe 🌿";
-  if (c.happy >= 10) return "Such a joyful month ✨";
-  if (c.sad >= 8) return "Emotionally heavy month 💙";
-  if (c.excited >= 6) return "So much excitement 🤩";
-  if (c.calm >= 8) return "A very peaceful month 🌱";
-  return "Track more days to get deeper insights 🌈";
+// ---------------- Personalized message ----------------
+function getPersonalizedMessage(counts){
+  const { happy, calm, sad, stressed, excited } = counts;
+  if(happy >= 6 && sad >= 6) return "High highs + low lows — try a small routine to balance your days ✨";
+  if(stressed >= 7) return "Stress seems common — remember small breaks and deep breaths 🌿";
+  if(sad >= 8) return "This month looks heavy — be gentle with yourself and reach out if you can 💙";
+  if(happy >= 10) return "So many bright days — keep glowing! 🌟";
+  if(excited >= 6) return "You're buzzing with energy — ride that sparkle! 🤩";
+  if(calm >= 8) return "A calm and steady month — lovely grounding energy 🌱";
+  return "Keep tracking — the more days you log, the clearer your insights become ✨";
 }
 
-function updatePersonalMessage() {
+function updatePersonalMessage(){
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-
   const counts = getMonthlyMoodCounts(year, month);
-  document.getElementById("personal-message").innerText =
-    getPersonalizedMessage(counts);
+  document.getElementById("personal-message").innerText = getPersonalizedMessage(counts);
 }
 
-// ----------- MONTHLY BAR CHART ---------------
-function updateMonthlyChart() {
+// ---------------- Monthly chart ----------------
+function updateMonthlyChart(){
   const ctx = document.getElementById("monthlyChart");
+  const y = currentDate.getFullYear();
+  const m = currentDate.getMonth();
+  const counts = getMonthlyMoodCounts(y,m);
 
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-  const c = getMonthlyMoodCounts(year, month);
-
-  if (monthlyChart) monthlyChart.destroy();
+  if(monthlyChart) monthlyChart.destroy();
 
   monthlyChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["Happy", "Calm", "Sad", "Stressed", "Excited"],
+      labels: ["Happy","Calm","Sad","Stressed","Excited"],
       datasets: [{
-        data: [c.happy, c.calm, c.sad, c.stressed, c.excited]
+        label: "Days",
+        data: [counts.happy, counts.calm, counts.sad, counts.stressed, counts.excited],
+        borderRadius: 8,
+        barThickness: 24,
       }]
+    },
+    options: {
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{beginAtZero:true, ticks:{precision:0}}
+      }
     }
   });
 }
 
-// ----------- YEARLY SUMMARY ------------------
-function updateYearlySummary() {
+// ---------------- Yearly totals ----------------
+function updateYearlySummary(){
   const year = currentDate.getFullYear();
-  const summary = { happy: 0, calm: 0, sad: 0, stressed: 0, excited: 0 };
-
-  for (let m = 0; m < 12; m++) {
-    const c = getMonthlyMoodCounts(year, m);
-    Object.keys(summary).forEach(k => summary[k] += c[k]);
+  const totals = { happy:0, calm:0, sad:0, stressed:0, excited:0 };
+  for(let mm=0; mm<12; mm++){
+    const c = getMonthlyMoodCounts(year, mm);
+    Object.keys(totals).forEach(k => totals[k] += c[k]);
   }
-
-  document.getElementById("year-summary").innerText =
-    `Yearly totals → Happy: ${summary.happy}, Calm: ${summary.calm},
-Sad: ${summary.sad}, Stressed: ${summary.stressed}, Excited: ${summary.excited}`;
+  const el = document.getElementById("year-summary");
+  el.innerText = `Yearly — 😊 ${totals.happy}  😌 ${totals.calm}  😢 ${totals.sad}  😣 ${totals.stressed}  🤩 ${totals.excited}`;
 }
 
-// ----------- PDF DOWNLOAD --------------------
-downloadPDF.onclick = async () => {
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-
+// ---------------- Clear month ----------------
+clearMonthBtn.onclick = () => {
   const year = currentDate.getFullYear();
-  const monthName = currentDate.toLocaleString("en-US", { month: "long" });
-  const counts = getMonthlyMoodCounts(year, currentDate.getMonth());
+  const month = currentDate.getMonth();
+  const last = new Date(year, month + 1, 0).getDate();
+  if(!confirm("Clear all mood entries for this month? This cannot be undone.")) return;
+  for(let d=1; d<=last; d++){
+    localStorage.removeItem(keyFor(year, month, d));
+  }
+  renderCalendar();
+};
+
+// ---------------- PDF download ----------------
+downloadPDF.onclick = () => {
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({unit:"pt", format:"a4"});
+  const y = currentDate.getFullYear();
+  const mName = currentDate.toLocaleDateString("en-US",{month:"long"});
+  const counts = getMonthlyMoodCounts(y, currentDate.getMonth());
 
   pdf.setFontSize(18);
-  pdf.text(`Mood Report – ${monthName} ${year}`, 10, 20);
-
+  pdf.text(`Mood Report — ${mName} ${y}`, 40, 60);
   pdf.setFontSize(12);
-  pdf.text(`Happy: ${counts.happy}`, 10, 40);
-  pdf.text(`Calm: ${counts.calm}`, 10, 50);
-  pdf.text(`Sad: ${counts.sad}`, 10, 60);
-  pdf.text(`Stressed: ${counts.stressed}`, 10, 70);
-  pdf.text(`Excited: ${counts.excited}`, 10, 80);
+  pdf.text(`😊 Happy: ${counts.happy}`, 40, 100);
+  pdf.text(`😌 Calm: ${counts.calm}`, 40, 120);
+  pdf.text(`😢 Sad: ${counts.sad}`, 40, 140);
+  pdf.text(`😣 Stressed: ${counts.stressed}`, 40, 160);
+  pdf.text(`🤩 Excited: ${counts.excited}`, 40, 180);
 
-  pdf.text("Personalized Insight:", 10, 100);
-  pdf.text(getPersonalizedMessage(counts), 10, 110);
+  pdf.text("Insight:", 40, 210);
+  pdf.text(getPersonalizedMessage(counts), 40, 230, {maxWidth:500});
 
-  pdf.save(`MoodReport-${monthName}-${year}.pdf`);
+  pdf.save(`MoodReport-${mName}-${y}.pdf`);
 };
+
+// ---------------- Navigation ----------------
+document.getElementById("prev").onclick = () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); };
+document.getElementById("next").onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); };
+
+// ---------------- Init ----------------
+function init(){
+  renderCalendar();
+  wireMoodButtons();
+}
+window.addEventListener("load", init);
