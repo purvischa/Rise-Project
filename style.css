@@ -1,65 +1,303 @@
-body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
-  color: #333;
-  text-align: center;
+/* -------- RESET-ish ---------- */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+}
+
+/* -------- PAGE + BACKGROUND ---------- */
+body {
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #333;
   min-height: 100vh;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-top: 1.5rem;
-}
-
-.quote-box {
-  background: white;
-  border-radius: 12px;
-  margin: 1.5rem auto;
-  padding: 1rem;
-  width: 80%;
-  max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.calendar {
-  width: 350px;
-  margin: auto;
-  padding: 20px;
-}
-
-.month {
+  background: linear-gradient(135deg, #fbe4ff, #c9e7ff);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+  overflow-x: hidden;
 }
 
-.weekdays, .days {
+/* Bubble canvas sits behind everything */
+#bubbleCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Wrap main card */
+.page-wrapper {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* -------- MAIN CARD ---------- */
+.app-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 1.75rem 1.5rem 2rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+
+.app-card h1 {
+  font-size: 1.7rem;
+  margin-bottom: 0.4rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 1.2rem;
+}
+
+/* Fade-in animation */
+.fade-in {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -------- QUOTE BOX ---------- */
+.quote-box {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  margin: 0 auto 1.1rem;
+  width: 100%;
+  font-size: 0.9rem;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #ffc6ff;
+}
+.quote-box.soft {
+  border-left-color: #b8e1ff;
+}
+
+/* -------- CALENDAR ---------- */
+.calendar-section {
+  margin-bottom: 1rem;
+}
+
+.month-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.month-row h2 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.nav-btn {
+  border: none;
+  background: #f3e7ff;
+  color: #555;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s ease, transform 0.08s ease;
+}
+
+.nav-btn:hover {
+  background: #e8d7ff;
+  transform: translateY(-1px);
+}
+
+.weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  font-size: 0.7rem;
+  color: #888;
+  margin-bottom: 0.4rem;
+}
+
+.weekdays div {
+  padding: 0.2rem 0;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
 }
 
 .days div {
-  padding: 15px;
-  border: 1px solid #eee;
+  font-size: 0.8rem;
+  background: #f9f7ff;
+  border-radius: 10px;
+  padding: 0.45rem 0.25rem;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, transform 0.08s ease, box-shadow 0.1s ease;
+  word-break: break-word;
 }
 
 .days div:hover {
-  background-color: #f0f0f0;
+  background: #f1e7ff;
+  box-shadow: 0 4px 10px rgba(142, 123, 186, 0.25);
+  transform: translateY(-1px);
 }
 
-.popup {
-    display: none;
-    position: fixed;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-    background: white;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
+/* -------- ANALYTICS ---------- */
+.analytics-section {
+  margin-top: 1.2rem;
+  text-align: left;
+}
+
+.analytics-section h2 {
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.chart-wrapper {
+  width: 100%;
+  max-height: 220px;
+  margin: 0 auto 0.8rem;
+}
+
+#monthlyChart {
+  width: 100%;
+  height: 200px;
+}
+
+/* Yearly summary smaller + compact */
+.small-summary {
+  font-size: 0.8rem;
+  line-height: 1.35;
+  margin-top: 0.3rem;
+  border-left-color: #ffd6a5;
+}
+
+/* PDF button */
+.download-btn {
+  margin-top: 0.9rem;
+  width: 100%;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(120deg, #ffafcc, #ffc6ff);
+  color: #402b43;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(255, 175, 204, 0.45);
+  transition: transform 0.08s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+}
+
+.download-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(255, 175, 204, 0.6);
+  opacity: 0.95;
+}
+
+/* -------- POPUP ---------- */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: none; /* toggled in JS */
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.popup-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 1.4rem 1.3rem 1.2rem;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 15px 28px rgba(0, 0, 0, 0.18);
+  position: relative;
+  text-align: center;
+}
+
+.popup-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.6rem;
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #999;
+}
+
+/* Mood buttons grid */
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.mood {
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: #f6f0ff;
+  transition: transform 0.08s ease, box-shadow 0.1s ease, background 0.15s ease;
+}
+
+.mood:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(185, 152, 255, 0.4);
+}
+
+.mood-happy {
+  background: #fff3c4;
+}
+.mood-calm {
+  background: #d8f3ff;
+}
+.mood-sad {
+  background: #e0e7ff;
+}
+.mood-stressed {
+  background: #ffd6d6;
+}
+.mood-excited {
+  grid-column: span 2;
+  background: #ffe1ff;
+}
+
+/* Optional popup animation */
+.pop-animate {
+  animation: popIn 0.28s ease-out;
+}
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

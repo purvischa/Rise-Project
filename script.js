@@ -2,7 +2,7 @@
 const moodQuotes = {
   happy: ["Keep shining!", "Happiness looks great on you 🌞", "Cherish this moment!"],
   calm: ["Peace begins with a breath 🌿", "You're grounded.", "Stillness is your power."],
-  sad: ["It's okay to feel sad 💙", "One small step.", "You are allowed to rest."],
+  sad: ["It's okay to feel sad 💙", "One small step at a time.", "You are allowed to rest."],
   stressed: ["Breathe. You've got this.", "Progress, not perfection.", "You are stronger than stress."],
   excited: ["Ride the excitement!", "Great things ahead!", "Energy is flowing ✨"]
 };
@@ -12,6 +12,18 @@ const buttons = document.querySelectorAll(".mood");
 const quoteDisplay = document.getElementById("quote");
 const body = document.body;
 
+// Calendar elements
+const daysContainer = document.getElementById("days");
+const monthYear = document.getElementById("month-year");
+const moodPopup = document.getElementById("mood-popup");
+const closeBtn = document.getElementById("close");
+const downloadPDF = document.getElementById("downloadPDF");
+
+let currentDate = new Date();
+let selectedDay = null;
+let monthlyChart = null;
+
+// ---------- Helpers ----------
 function showQuote(mood) {
   const quotes = moodQuotes[mood];
   quoteDisplay.innerText = quotes[Math.floor(Math.random() * quotes.length)];
@@ -28,17 +40,7 @@ function changeBackground(mood) {
   body.style.background = gradients[mood];
 }
 
-// Calendar -----------------------
-const daysContainer = document.getElementById("days");
-const monthYear = document.getElementById("month-year");
-const moodPopup = document.getElementById("mood-popup");
-const closeBtn = document.getElementById("close");
-const downloadPDF = document.getElementById("downloadPDF");
-
-let currentDate = new Date();
-let selectedDay = null;
-let monthlyChart = null;
-
+// ---------- Calendar Render ----------
 function renderCalendar() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -53,10 +55,13 @@ function renderCalendar() {
 
   daysContainer.innerHTML = "";
 
+  // Blank cells before first day
   for (let i = 0; i < firstDay; i++) {
-    daysContainer.innerHTML += "<div></div>";
+    const blank = document.createElement("div");
+    daysContainer.appendChild(blank);
   }
 
+  // Days
   for (let day = 1; day <= lastDate; day++) {
     const div = document.createElement("div");
     const key = `${month + 1}-${day}-${year}`;
@@ -66,7 +71,7 @@ function renderCalendar() {
 
     div.addEventListener("click", () => {
       selectedDay = key;
-      moodPopup.style.display = "block";
+      moodPopup.style.display = "flex";
     });
 
     daysContainer.appendChild(div);
@@ -77,23 +82,27 @@ function renderCalendar() {
   updateYearlySummary();
 }
 
+// Initial render
 renderCalendar();
 
+// Month navigation
 document.getElementById("prev").onclick = () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
   renderCalendar();
 };
+
 document.getElementById("next").onclick = () => {
   currentDate.setMonth(currentDate.getMonth() + 1);
   renderCalendar();
 };
 
+// Mood buttons
 buttons.forEach(button => {
   button.addEventListener("click", () => {
     const mood = button.dataset.mood;
+    if (!selectedDay) return;
 
     localStorage.setItem(selectedDay, mood);
-
     showQuote(mood);
     changeBackground(mood);
 
@@ -102,27 +111,37 @@ buttons.forEach(button => {
   });
 });
 
-closeBtn.onclick = () => moodPopup.style.display = "none";
+// Close popup
+closeBtn.addEventListener("click", () => {
+  moodPopup.style.display = "none";
+});
 
-// ----------- MONTHLY ANALYTICS ---------------
+// Click outside popup closes it
+moodPopup.addEventListener("click", (e) => {
+  if (e.target === moodPopup) {
+    moodPopup.style.display = "none";
+  }
+});
+
+// ---------- MONTHLY ANALYTICS ----------
 function getMonthlyMoodCounts(year, month) {
-  const list = { happy: 0, calm: 0, sad: 0, stressed: 0, excited: 0 };
+  const counts = { happy: 0, calm: 0, sad: 0, stressed: 0, excited: 0 };
   const lastDate = new Date(year, month + 1, 0).getDate();
 
   for (let d = 1; d <= lastDate; d++) {
     const key = `${month + 1}-${d}-${year}`;
     const mood = localStorage.getItem(key);
-    if (list[mood] !== undefined) list[mood]++;
+    if (counts[mood] !== undefined) counts[mood]++;
   }
-  return list;
+  return counts;
 }
 
 function getPersonalizedMessage(c) {
   if (c.happy >= 5 && c.sad >= 5) return "High highs + low lows — work on balance 💛";
-  if (c.stressed >= 7) return "Lots of stress this month. Breathe 🌿";
+  if (c.stressed >= 7) return "Lots of stress this month. Remember to rest 🌿";
   if (c.happy >= 10) return "Such a joyful month ✨";
-  if (c.sad >= 8) return "Emotionally heavy month 💙";
-  if (c.excited >= 6) return "So much excitement 🤩";
+  if (c.sad >= 8) return "Looks like an emotionally heavy month 💙";
+  if (c.excited >= 6) return "So much excitement this month 🤩";
   if (c.calm >= 8) return "A very peaceful month 🌱";
   return "Track more days to get deeper insights 🌈";
 }
@@ -136,7 +155,7 @@ function updatePersonalMessage() {
     getPersonalizedMessage(counts);
 }
 
-// ----------- MONTHLY BAR CHART ---------------
+// ---------- MONTHLY CHART ----------
 function updateMonthlyChart() {
   const ctx = document.getElementById("monthlyChart");
 
@@ -151,28 +170,48 @@ function updateMonthlyChart() {
     data: {
       labels: ["Happy", "Calm", "Sad", "Stressed", "Excited"],
       datasets: [{
-        data: [c.happy, c.calm, c.sad, c.stressed, c.excited]
+        data: [c.happy, c.calm, c.sad, c.stressed, c.excited],
+        backgroundColor: ["#ffd166", "#a8dadc", "#9fb4ff", "#ff9e9e", "#e9ffcb"],
+        borderRadius: 8
       }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10 } }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: "rgba(0,0,0,0.05)" },
+          ticks: { stepSize: 1, font: { size: 10 } }
+        }
+      }
     }
   });
 }
 
-// ----------- YEARLY SUMMARY ------------------
+// ---------- YEARLY SUMMARY ----------
 function updateYearlySummary() {
   const year = currentDate.getFullYear();
   const summary = { happy: 0, calm: 0, sad: 0, stressed: 0, excited: 0 };
 
   for (let m = 0; m < 12; m++) {
     const c = getMonthlyMoodCounts(year, m);
-    Object.keys(summary).forEach(k => summary[k] += c[k]);
+    Object.keys(summary).forEach(k => (summary[k] += c[k]));
   }
 
   document.getElementById("year-summary").innerText =
-    `Yearly totals → Happy: ${summary.happy}, Calm: ${summary.calm},
-Sad: ${summary.sad}, Stressed: ${summary.stressed}, Excited: ${summary.excited}`;
+    `Yearly totals → Happy: ${summary.happy}, Calm: ${summary.calm}, ` +
+    `Sad: ${summary.sad}, Stressed: ${summary.stressed}, Excited: ${summary.excited}`;
 }
 
-// ----------- PDF DOWNLOAD --------------------
+// ---------- PDF DOWNLOAD ----------
 downloadPDF.onclick = async () => {
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF();
@@ -197,105 +236,66 @@ downloadPDF.onclick = async () => {
   pdf.save(`MoodReport-${monthName}-${year}.pdf`);
 };
 
-/* -------------------------------------------
-    BOUNCING BUBBLES BACKGROUND
----------------------------------------------*/
-
+// ---------- BUBBLE BACKGROUND ----------
 const canvas = document.getElementById("bubbleCanvas");
-const ctx = canvas.getContext("2d");
+const ctx2 = canvas.getContext("2d");
 
-// Make sure canvas matches screen size
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
 
-// Calm color palette
 const bubbleColors = ["#b6f2d1", "#a8e8ff", "#d1ccff", "#f7f3ff"];
 const bubbles = [];
 const bubbleCount = 25;
 
 class Bubble {
-    constructor() {
-        this.radius = Math.random() * 35 + 20;
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
+  constructor() {
+    this.radius = Math.random() * 30 + 18;
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.8;
+    this.vy = (Math.random() - 0.5) * 0.8;
+    this.color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
+  }
 
-        // random movement
-        this.vx = (Math.random() * 1 - 0.5) * 1.2;
-        this.vy = (Math.random() * 1 - 0.5) * 1.2;
+  draw() {
+    ctx2.beginPath();
+    ctx2.fillStyle = this.color + "55";
+    ctx2.shadowColor = this.color;
+    ctx2.shadowBlur = 20;
+    ctx2.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx2.fill();
+    ctx2.closePath();
+  }
 
-        this.color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+      this.vx *= -1;
+    }
+    if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+      this.vy *= -1;
     }
 
-    draw() {
-        ctx.beginPath();
-        ctx.fillStyle = this.color + "44"; // transparent fill
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 25;
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.closePath();
-    }
-
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        // bounce off walls
-        if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
-            this.vx *= -1;
-        }
-        if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
-            this.vy *= -1;
-        }
-
-        // simple collision with other bubbles
-        for (let other of bubbles) {
-            if (other !== this) {
-                const dx = this.x - other.x;
-                const dy = this.y - other.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                const minDist = this.radius + other.radius;
-
-                if (distance < minDist) {
-                    const angle = Math.atan2(dy, dx);
-                    const overlap = (minDist - distance) / 2;
-
-                    this.x += Math.cos(angle) * overlap;
-                    this.y += Math.sin(angle) * overlap;
-                    other.x -= Math.cos(angle) * overlap;
-                    other.y -= Math.sin(angle) * overlap;
-
-                    this.vx *= -1;
-                    this.vy *= -1;
-                }
-            }
-        }
-
-        this.draw();
-    }
+    this.draw();
+  }
 }
 
-// create bubbles
 for (let i = 0; i < bubbleCount; i++) {
-    bubbles.push(new Bubble());
+  bubbles.push(new Bubble());
 }
 
-// animate bubbles
 function animateBubbles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let b of bubbles) {
-        b.update();
-    }
-
-    requestAnimationFrame(animateBubbles);
+  ctx2.clearRect(0, 0, canvas.width, canvas.height);
+  bubbles.forEach(b => b.update());
+  requestAnimationFrame(animateBubbles);
 }
-
 animateBubbles();
 
-// keep canvas full screen on resize
 window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  resizeCanvas();
 });
-
