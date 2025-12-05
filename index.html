@@ -1,69 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mental Health Mood Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 
+  <!-- ChartJS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
 
-    <h1 class="fade-in">🌸 Mental Health Mood Tracker 🌸</h1>
+  <h1>🌸 Mental Health Mood Tracker 🌸</h1>
+  <p class="subtitle">Tap a day and choose how you feel 💛</p>
 
-    <div id="quote" class="quote-box fade-in">Tap a day and choose how you feel 💛</div>
+  <div class="calendar-container">
+      <div class="calendar-header">
+          <button id="prevMonth">◀</button>
+          <h2 id="monthYear"></h2>
+          <button id="nextMonth">▶</button>
+      </div>
 
-    <!-- Calendar -->
-    <div class="calendar fade-in">
-        <div class="month">
-            <button id="prev">◀</button>
-            <h2 id="month-year"></h2>
-            <button id="next">▶</button>
-        </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+  </div>
 
-        <div class="weekdays">
-            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
-            <div>Thu</div><div>Fri</div><div>Sat</div>
-        </div>
+  <!-- Mood selector popup -->
+  <div id="moodPopup" class="popup hidden">
+      <p>Select your mood for: <span id="popupDate"></span></p>
+      <div class="mood-options">
+          <button data-mood="Happy" class="m happy">😊</button>
+          <button data-mood="Sad" class="m sad">😢</button>
+          <button data-mood="Angry" class="m angry">😡</button>
+          <button data-mood="Calm" class="m calm">😌</button>
+          <button data-mood="Excited" class="m excited">🤩</button>
+      </div>
+  </div>
 
-        <div class="days" id="days"></div>
-    </div>
+  <h2>Monthly Mood Chart</h2>
+  <canvas id="moodChart"></canvas>
 
-    <h2 class="fade-in">Monthly Mood Chart</h2>
-    <canvas id="monthlyChart" width="350" height="200"></canvas>
-
-
-    <!-- Mood Popup -->
-    <div id="mood-popup" class="popup pop-animate">
-        <h3>How are you feeling today?</h3>
-
-        <button class="mood happy" data-mood="happy">😊 Happy</button>
-        <button class="mood calm" data-mood="calm">😌 Calm</button>
-        <button class="mood sad" data-mood="sad">😢 Sad</button>
-        <button class="mood stressed" data-mood="stressed">😣 Stressed</button>
-        <button class="mood excited" data-mood="excited">🤩 Excited</button>
-
-        <br><br>
-        <button id="close">Close</button>
-    </div>
-
-
-    <!-- Journal Popup -->
-    <div id="journal-popup" class="popup pop-animate">
-        <h3>Your Journal Entry 💗</h3>
-
-        <textarea id="journal-text" placeholder="Write how you feel..."></textarea>
-
-        <button id="save-entry" class="journal-btn">Save Entry</button>
-        <button id="close-journal" class="journal-btn">Close</button>
-    </div>
-
-    <!-- Mascot -->
-    <div class="mascot">🧸</div>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
+  
 </body>
 </html>

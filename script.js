@@ -1,90 +1,106 @@
-const daysContainer = document.getElementById("days");
-const monthYear = document.getElementById("month-year");
-const moodPopup = document.getElementById("mood-popup");
-const journalPopup = document.getElementById("journal-popup");
-const journalText = document.getElementById("journal-text");
+let currentDate = new Date();
+let moodData = JSON.parse(localStorage.getItem("moodData")) || {};
+
+const monthYear = document.getElementById("monthYear");
+const calendarGrid = document.getElementById("calendarGrid");
+const popup = document.getElementById("moodPopup");
+const popupDate = document.getElementById("popupDate");
+const chartCanvas = document.getElementById("moodChart");
 
 let selectedDay = null;
-let current = new Date();
+let chart = null;
 
-// Render Calendar
 function renderCalendar() {
-    daysContainer.innerHTML = "";
-    const year = current.getFullYear();
-    const month = current.getMonth();
+    calendarGrid.innerHTML = "";
 
-    monthYear.innerText = current.toLocaleString("default", { month: "long" }) + " " + year;
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    monthYear.innerText = currentDate.toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+    });
 
     const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const lastDate = new Date(year, month + 1, 0).getDate();
 
     for (let i = 0; i < firstDay; i++) {
-        daysContainer.innerHTML += `<div></div>`;
+        calendarGrid.appendChild(document.createElement("div"));
     }
 
-    for (let i = 1; i <= daysInMonth; i++) {
-        const btn = document.createElement("div");
-        const key = `${year}-${month}-${i}`;
+    for (let day = 1; day <= lastDate; day++) {
+        const div = document.createElement("div");
 
-        const savedMood = localStorage.getItem(key);
-        const savedJournal = localStorage.getItem(key + "-journal");
+        div.innerText = day;
+        div.onclick = () => openMoodPopup(day);
 
-        btn.innerHTML = savedMood ? moodEmoji(savedMood) : i;
+        let key = `${year}-${month}-${day}`;
+        if (moodData[key]) div.classList.add("selected");
 
-        btn.onclick = () => {
-            selectedDay = key;
-            journalText.value = savedJournal || "";
-            moodPopup.style.display = "block";
-        };
-
-        daysContainer.appendChild(btn);
+        calendarGrid.appendChild(div);
     }
+
+    updateChart();
 }
 
-function moodEmoji(mood) {
-    return {
-        happy: "😊",
-        calm: "😌",
-        sad: "😢",
-        stressed: "😣",
-        excited: "🤩"
-    }[mood];
+document.getElementById("prevMonth").onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+};
+
+document.getElementById("nextMonth").onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+};
+
+function openMoodPopup(day) {
+    selectedDay = day;
+    popupDate.innerText = `${selectedDay}`;
+    popup.classList.remove("hidden");
 }
 
-// Mood click
-document.querySelectorAll(".mood").forEach(button => {
-    button.onclick = () => {
-        localStorage.setItem(selectedDay, button.dataset.mood);
-        moodPopup.style.display = "none";
-        journalPopup.style.display = "block";
+document.querySelectorAll(".m").forEach(btn => {
+    btn.onclick = () => {
+        saveMood(btn.dataset.mood);
     };
 });
 
-// Save journal entry
-document.getElementById("save-entry").onclick = () => {
-    localStorage.setItem(selectedDay + "-journal", journalText.value);
-    journalPopup.style.display = "none";
+function saveMood(mood) {
+    const key = `${currentDate.getFullYear()}-${currentDate.getMonth()}-${selectedDay}`;
+    moodData[key] = mood;
+
+    localStorage.setItem("moodData", JSON.stringify(moodData));
+    popup.classList.add("hidden");
     renderCalendar();
-};
+}
 
-// Close popups
-document.getElementById("close-journal").onclick = () => {
-    journalPopup.style.display = "none";
-};
+function updateChart() {
+    const moodCounts = {};
+    Object.values(moodData).forEach(m => {
+        moodCounts[m] = (moodCounts[m] || 0) + 1;
+    });
 
-document.getElementById("close").onclick = () => {
-    moodPopup.style.display = "none";
-};
+    const labels = Object.keys(moodCounts);
+    const values = Object.values(moodCounts);
 
-// Month navigation
-document.getElementById("prev").onclick = () => {
-    current.setMonth(current.getMonth() - 1);
-    renderCalendar();
-};
+    if (chart) chart.destroy();
 
-document.getElementById("next").onclick = () => {
-    current.setMonth(current.getMonth() + 1);
-    renderCalendar();
-};
-
+    chart = new Chart(chartCanvas, {
+        type: "pie",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { position: "bottom" }
+            }
+        }
+    });
+}
 renderCalendar();
+document.getElementById("closePopup").onclick = () => {
+    popup.classList.add("hidden");
+};
