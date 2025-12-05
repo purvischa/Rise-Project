@@ -53,41 +53,13 @@ h1 {
 }
 
 .popup {
-  display: none;
-  position: fixed;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -30%);
-  background: white;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  z-index: 10;
-}
-
-button.mood {
-  padding: 10px;
-  margin: 5px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.happy { background-color: #ffec99; }
-.calm { background-color: #a3e4d7; }
-.sad { background-color: #aed6f1; }
-.stressed { background-color: #f5b7b1; }
-.excited { background-color: #fad7a0; }
-
-.download-btn {
-  background: #ffffff;
-  border: 2px solid #555;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-
-.download-btn:hover {
-  background: #f0f0f0;
+    display: none;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
 }
