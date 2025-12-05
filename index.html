@@ -8,14 +8,13 @@
   <link rel="stylesheet" href="style.css" />
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
 
-    <h1 class="fade-in">Mental Health Mood Tracker</h1>
+    <h1 class="fade-in">🌸 Mental Health Mood Tracker 🌸</h1>
 
-    <div id="quote" class="quote-box fade-in">Select a day and choose a mood 💛</div>
+    <div id="quote" class="quote-box fade-in">Tap a day and choose how you feel 💛</div>
 
     <!-- Calendar -->
     <div class="calendar fade-in">
@@ -33,25 +32,13 @@
         <div class="days" id="days"></div>
     </div>
 
-    <!-- Personalized Monthly Message -->
-    <div id="personal-message" class="quote-box fade-in" style="margin-top: 20px;">
-        Your monthly mood summary will appear here.
-    </div>
-
-    <!-- Monthly Bar Chart -->
     <h2 class="fade-in">Monthly Mood Chart</h2>
     <canvas id="monthlyChart" width="350" height="200"></canvas>
 
-    <!-- Yearly Summary Panel -->
-    <h2 class="fade-in">Yearly Mood Summary</h2>
-    <div id="year-summary" class="quote-box fade-in"></div>
-
-    <!-- Download Button -->
-    <button id="downloadPDF" class="download-btn fade-in">Download Monthly Report (PDF)</button>
 
     <!-- Mood Popup -->
     <div id="mood-popup" class="popup pop-animate">
-        <h3>Select Your Mood</h3>
+        <h3>How are you feeling today?</h3>
 
         <button class="mood happy" data-mood="happy">😊 Happy</button>
         <button class="mood calm" data-mood="calm">😌 Calm</button>
@@ -62,6 +49,20 @@
         <br><br>
         <button id="close">Close</button>
     </div>
+
+
+    <!-- Journal Popup -->
+    <div id="journal-popup" class="popup pop-animate">
+        <h3>Your Journal Entry 💗</h3>
+
+        <textarea id="journal-text" placeholder="Write how you feel..."></textarea>
+
+        <button id="save-entry" class="journal-btn">Save Entry</button>
+        <button id="close-journal" class="journal-btn">Close</button>
+    </div>
+
+    <!-- Mascot -->
+    <div class="mascot">🧸</div>
 
     <script src="script.js"></script>
 </body>

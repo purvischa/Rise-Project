@@ -1,34 +1,58 @@
 body {
   font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
-  color: #333;
+  background: linear-gradient(135deg, #ffe1ff, #c7d9ff);
+  color: #444;
   text-align: center;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+}
+
+.mascot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 3rem;
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
 h1 {
-  font-size: 2rem;
   margin-top: 1.5rem;
+  font-size: 2rem;
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .quote-box {
   background: white;
-  border-radius: 12px;
-  margin: 1.5rem auto;
+  border-radius: 16px;
   padding: 1rem;
   width: 80%;
-  max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  max-width: 450px;
+  margin: 1rem auto;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
 }
 
 .calendar {
   width: 350px;
   margin: auto;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 25px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
 }
 
 .month {
@@ -43,13 +67,15 @@ h1 {
 }
 
 .days div {
-  padding: 15px;
-  border: 1px solid #eee;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #f3f3f3;
   cursor: pointer;
+  transition: .2s;
 }
 
 .days div:hover {
-  background-color: #f0f0f0;
+  background-color: #ffe5ff;
 }
 
 .popup {
@@ -58,36 +84,34 @@ h1 {
   top: 30%;
   left: 50%;
   transform: translate(-50%, -30%);
-  background: white;
+  background: #fffbff;
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  z-index: 10;
+  border-radius: 18px;
+  width: 350px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  z-index: 100;
 }
 
-button.mood {
+textarea {
+  width: 90%;
+  height: 100px;
+  border-radius: 10px;
+  border: 2px solid #ffd4f3;
   padding: 10px;
-  margin: 5px;
+}
+
+button.mood,
+.journal-btn {
+  padding: 10px 20px;
+  background: #ffd0ff;
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  margin-top: 10px;
+  transition: .2s;
 }
 
-.happy { background-color: #ffec99; }
-.calm { background-color: #a3e4d7; }
-.sad { background-color: #aed6f1; }
-.stressed { background-color: #f5b7b1; }
-.excited { background-color: #fad7a0; }
-
-.download-btn {
-  background: #ffffff;
-  border: 2px solid #555;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-
-.download-btn:hover {
-  background: #f0f0f0;
+button.mood:hover,
+.journal-btn:hover {
+  background: #ffacff;
 }
