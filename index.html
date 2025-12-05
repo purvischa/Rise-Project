@@ -1,18 +1,16 @@
-// commenting example
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mental Health Tracker</title>
+
+  <title>Mental Health Mood Tracker</title>
   <link rel="stylesheet" href="style.css" />
 
-<head>
-    <title>Mood Tracker Calendar</title>
-    <link rel="stylesheet" href="style.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
     <canvas id="bubbleCanvas"></canvas>
 
@@ -20,6 +18,7 @@
 
     <div id="quote" class="quote-box fade-in">Select a day and choose a mood 💛</div>
 
+    <!-- Calendar -->
     <div class="calendar fade-in">
         <div class="month">
             <button id="prev">◀</button>
@@ -28,20 +27,28 @@
         </div>
 
         <div class="weekdays">
-            <div>Sun</div>
-            <div>Mon</div>
-            <div>Tue</div>
-            <div>Wed</div>
-            <div>Thu</div>
-            <div>Fri</div>
-            <div>Sat</div>
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
+            <div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
 
         <div class="days" id="days"></div>
     </div>
 
-    <h2 class="fade-in">Mood History Chart</h2>
-    <canvas id="moodChart" width="350" height="200"></canvas>
+    <!-- Personalized Monthly Message -->
+    <div id="personal-message" class="quote-box fade-in" style="margin-top: 20px;">
+        Your monthly mood summary will appear here.
+    </div>
+
+    <!-- Monthly Bar Chart -->
+    <h2 class="fade-in">Monthly Mood Chart</h2>
+    <canvas id="monthlyChart" width="350" height="200"></canvas>
+
+    <!-- Yearly Summary Panel -->
+    <h2 class="fade-in">Yearly Mood Summary</h2>
+    <div id="year-summary" class="quote-box fade-in"></div>
+
+    <!-- Download Button -->
+    <button id="downloadPDF" class="download-btn fade-in">Download Monthly Report (PDF)</button>
 
     <!-- Mood Popup -->
     <div id="mood-popup" class="popup pop-animate">
