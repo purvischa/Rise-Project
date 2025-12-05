@@ -147,3 +147,106 @@ buttons.forEach(button => {
 closeBtn.onclick = () => {
     moodPopup.style.display = "none";
 };
+
+/* -------------------------------------------
+    BOUNCING BUBBLES BACKGROUND
+---------------------------------------------*/
+
+const canvas = document.getElementById("bubbleCanvas");
+const ctx = canvas.getContext("2d");
+
+// Make sure canvas matches screen size
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Calm color palette
+const bubbleColors = ["#b6f2d1", "#a8e8ff", "#d1ccff", "#f7f3ff"];
+const bubbles = [];
+const bubbleCount = 25;
+
+class Bubble {
+    constructor() {
+        this.radius = Math.random() * 35 + 20;
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+
+        // random movement
+        this.vx = (Math.random() * 1 - 0.5) * 1.2;
+        this.vy = (Math.random() * 1 - 0.5) * 1.2;
+
+        this.color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.fillStyle = this.color + "44"; // transparent fill
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 25;
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // bounce off walls
+        if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+            this.vx *= -1;
+        }
+        if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+            this.vy *= -1;
+        }
+
+        // simple collision with other bubbles
+        for (let other of bubbles) {
+            if (other !== this) {
+                const dx = this.x - other.x;
+                const dy = this.y - other.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const minDist = this.radius + other.radius;
+
+                if (distance < minDist) {
+                    const angle = Math.atan2(dy, dx);
+                    const overlap = (minDist - distance) / 2;
+
+                    this.x += Math.cos(angle) * overlap;
+                    this.y += Math.sin(angle) * overlap;
+                    other.x -= Math.cos(angle) * overlap;
+                    other.y -= Math.sin(angle) * overlap;
+
+                    this.vx *= -1;
+                    this.vy *= -1;
+                }
+            }
+        }
+
+        this.draw();
+    }
+}
+
+// create bubbles
+for (let i = 0; i < bubbleCount; i++) {
+    bubbles.push(new Bubble());
+}
+
+// animate bubbles
+function animateBubbles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let b of bubbles) {
+        b.update();
+    }
+
+    requestAnimationFrame(animateBubbles);
+}
+
+animateBubbles();
+
+// keep canvas full screen on resize
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
